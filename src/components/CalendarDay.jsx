@@ -24,17 +24,13 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
       <button
         onClick={() => onToggleTask(dateKey, id)}
         className={cn(
-          "group relative flex items-center w-full px-2 py-1 rounded-md text-xs font-bold transition-all duration-200",
+          "group relative flex items-center w-full px-1 py-1 rounded-md text-xs font-bold transition-all duration-200 overflow-hidden",
           isActive
             ? cn(activeBgClass, activeTextClass, "shadow-sm ring-1 ring-black/5")
             : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
         )}
       >
-        <span className={cn(
-          "w-2 h-2 rounded-full mr-2 shrink-0 transition-colors",
-          isActive ? "bg-current" : "bg-neutral-600 group-hover:bg-neutral-500"
-        )} />
-        <span className="truncate">{label}</span>
+        <span className="truncate w-full text-left">{label}</span>
       </button>
     );
   };
