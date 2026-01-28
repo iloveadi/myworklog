@@ -22,24 +22,35 @@ function App() {
 
   const initializeSupabase = async () => {
     setLoading(true);
+    const email = 'admin@myworklog.com';
+    const password = 'password1212';
+
     // 2. Background Login to Supabase
-    // Using hardcoded credentials to map "1212" to a real DB user
-    const { data: { session }, error } = await supabase.auth.signInWithPassword({
-      email: 'admin@myworklog.com',
-      password: 'password1212',
+    let { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    if (error) {
-      console.error("Supabase Login Error:", error);
-      // If login fails (e.g. invalid credentials or network), we might fallback or retry
-      // For now, let's try to fetch tasks anyway in case session exists or RLS is open
+    if (error && error.message.includes('Invalid login credentials')) {
+      // Fallback: Try to SignUp if user doesn't exist
+      console.log("Login failed, attempting signup...");
+      const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+        email,
+        password,
+      });
+
+      if (!signUpError && signUpData.session) {
+        data = signUpData; // Use signup session
+      } else if (signUpError) {
+        console.error("Signup Error:", signUpError);
+      }
     }
 
-    if (session) {
-      setSession(session);
-      fetchTasks(session.user.id);
+    if (data?.session) {
+      setSession(data.session);
+      fetchTasks(data.session.user.id);
     } else {
-      // Fallback: Try getting existing session
+      // Final Fallback: Check if there's an existing session from before
       const { data: { session: existingSession } } = await supabase.auth.getSession();
       if (existingSession) {
         setSession(existingSession);
