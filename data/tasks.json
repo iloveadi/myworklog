@@ -1,0 +1,29 @@
+{
+  "2025-12-29": {
+    "task1": false,
+    "task2": false,
+    "task3": false,
+    "task4": false,
+    "task5": false,
+    "task6": false,
+    "task7": false
+  },
+  "2025-12-30": {
+    "task1": false,
+    "task2": false,
+    "task3": true,
+    "task4": true,
+    "task5": false,
+    "task6": false,
+    "task7": false
+  },
+  "2026-01-01": {
+    "task1": false,
+    "task2": false,
+    "task3": false,
+    "task4": false,
+    "task5": true,
+    "task6": true,
+    "task7": false
+  }
+}
