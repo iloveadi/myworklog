@@ -8,6 +8,7 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [session, setSession] = useState(null);
+  const [saveStatus, setSaveStatus] = useState(''); // 'saved', 'saving', 'error'
 
   useEffect(() => {
     // 1. Check local passcode session
@@ -117,6 +118,7 @@ function App() {
 
     // 2. Sync to Supabase
     if (session) {
+      setSaveStatus('saving');
       const { error } = await supabase
         .from('user_tasks')
         .upsert({
@@ -127,6 +129,10 @@ function App() {
 
       if (error) {
         console.error('Error saving task:', error);
+        setSaveStatus('error');
+      } else {
+        setSaveStatus('saved');
+        setTimeout(() => setSaveStatus(''), 2000);
       }
     }
   };
@@ -161,6 +167,14 @@ function App() {
           잠금
         </button>
       </header>
+
+      {/* Debug/Status Indicator */}
+      <div className="fixed bottom-4 right-4 z-50">
+        {saveStatus === 'saving' && <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold shadow-sm">저장 중...</span>}
+        {saveStatus === 'saved' && <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-bold shadow-sm">저장 완료</span>}
+        {saveStatus === 'error' && <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold shadow-sm">저장 실패 (네트워크/설정 확인)</span>}
+        {!session && isAuthenticated && !loading && <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold shadow-sm">오프라인 (저장 안됨)</span>}
+      </div>
 
       <main className="w-full max-w-6xl flex-1 min-h-0 mb-4">
         <Calendar tasks={tasks} onToggleTask={handleToggleTask} />
