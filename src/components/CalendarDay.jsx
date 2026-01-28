@@ -61,8 +61,8 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
         {renderTask('task3', 'narrhub', 'bg-[#EDE9FE]', 'text-[#5B21B6]')}
         {renderTask('task4', '마음 산책', 'bg-[#FFE4E6]', 'text-[#9F1239]')}
         {renderTask('task5', '쉼표가 필요한 시간', 'bg-[#FEF3C7]', 'text-[#92400E]')}
-        {renderTask('task6', '네이버PM', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
-        {renderTask('task7', '티스토리PM', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
+        {renderTask('task6', '티스토리PM', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
+        {renderTask('task7', '네이버PM', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
       </div>
     </div>
   );
