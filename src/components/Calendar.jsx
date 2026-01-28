@@ -7,7 +7,8 @@ import {
     endOfMonth,
     startOfWeek,
     endOfWeek,
-    eachDayOfInterval
+    eachDayOfInterval,
+    isSameMonth
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
@@ -32,13 +33,20 @@ const Calendar = ({ tasks, onToggleTask }) => {
 
     const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
+    // Calculate Naver PM count for the current month
+    const naverPmCount = calendarDays.filter(day => {
+        if (!isSameMonth(day, currentMonth)) return false;
+        const dateKey = format(day, 'yyyy-MM-dd');
+        return tasks[dateKey]?.task7 === true;
+    }).length;
+
     return (
         <div className="flex flex-col h-full bg-neutral-900 rounded-2xl shadow-xl border border-neutral-800 overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-6 border-b border-neutral-800 bg-neutral-900">
                 <div className="flex items-center gap-4">
                     <h2 className="text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
-                        {format(currentMonth, 'yyyy년 M월', { locale: ko })}
+                        {format(currentMonth, 'yyyy년 M월', { locale: ko })} ({naverPmCount})
                     </h2>
                     <div className="flex items-center gap-1">
                         <button
