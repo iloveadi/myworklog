@@ -7,6 +7,30 @@
     <title>planner</title>
   </head>
   <body>
+    <!-- Global Error Handler for Vercel Debugging -->
+    <script>
+      window.onerror = function(message, source, lineno, colno, error) {
+        document.body.innerHTML = `
+          <div style="padding:20px; color:red; font-family:monospace; background:#fff0f0; border:1px solid red; margin:20px;">
+            <h3>Global Startup Error (Window)</h3>
+            <p><strong>Message:</strong> ${message}</p>
+            <p><strong>Source:</strong> ${source}:${lineno}:${colno}</p>
+            <pre>${error ? error.stack : 'No stacktrace'}</pre>
+          </div>
+        `;
+        return false;
+      };
+      
+      // Also catch unhandled promise rejections (e.g. async imports)
+      window.onunhandledrejection = function(event) {
+        document.body.innerHTML += `
+          <div style="padding:20px; color:darkred; font-family:monospace; background:#fff5f5; border:1px solid darkred; margin:20px;">
+             <h3>Unhandled Promise Rejection</h3>
+             <pre>${event.reason}</pre>
+          </div>
+        `;
+      };
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
