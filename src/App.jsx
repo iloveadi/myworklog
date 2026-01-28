@@ -1,29 +1,70 @@
 import React, { useState, useEffect } from 'react';
 import Calendar from './components/Calendar';
 import PasscodeGate from './components/PasscodeGate';
+import { supabase } from './supabaseClient';
 
 function App() {
   const [tasks, setTasks] = useState({});
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
-    // Check authentication
-    const auth = sessionStorage.getItem('auth');
+    // 1. Check local passcode session
+    const auth = sessionStorage.getItem('passcode_auth');
     if (auth === 'true') {
       setIsAuthenticated(true);
+      initializeSupabase();
+    } else {
+      setLoading(false); // Show login screen immediately
     }
-    fetchTasks();
   }, []);
 
-  const fetchTasks = async () => {
-    try {
-      const response = await fetch('/api/tasks');
-      if (response.ok) {
-        const data = await response.json();
-        setTasks(data);
+  const initializeSupabase = async () => {
+    setLoading(true);
+    // 2. Background Login to Supabase
+    // Using hardcoded credentials to map "1212" to a real DB user
+    const { data: { session }, error } = await supabase.auth.signInWithPassword({
+      email: 'admin@myworklog.com',
+      password: 'password1212',
+    });
+
+    if (error) {
+      console.error("Supabase Login Error:", error);
+      // If login fails (e.g. invalid credentials or network), we might fallback or retry
+      // For now, let's try to fetch tasks anyway in case session exists or RLS is open
+    }
+
+    if (session) {
+      setSession(session);
+      fetchTasks(session.user.id);
+    } else {
+      // Fallback: Try getting existing session
+      const { data: { session: existingSession } } = await supabase.auth.getSession();
+      if (existingSession) {
+        setSession(existingSession);
+        fetchTasks(existingSession.user.id);
       } else {
-        console.error('Failed to fetch tasks');
+        setLoading(false);
+      }
+    }
+  };
+
+  const fetchTasks = async (userId) => {
+    try {
+      const { data, error } = await supabase
+        .from('user_tasks')
+        .select('date_key, tasks')
+        .eq('user_id', userId);
+
+      if (error) throw error;
+
+      if (data) {
+        const loadedTasks = {};
+        data.forEach(item => {
+          loadedTasks[item.date_key] = item.tasks;
+        });
+        setTasks(loadedTasks);
       }
     } catch (error) {
       console.error('Error fetching tasks:', error);
@@ -33,13 +74,17 @@ function App() {
   };
 
   const handleAuthenticated = () => {
-    sessionStorage.setItem('auth', 'true');
+    sessionStorage.setItem('passcode_auth', 'true');
     setIsAuthenticated(true);
+    initializeSupabase();
   };
 
-  const handleLogout = () => {
-    sessionStorage.removeItem('auth');
+  const handleLogout = async () => {
+    sessionStorage.removeItem('passcode_auth');
     setIsAuthenticated(false);
+    setSession(null);
+    setTasks({});
+    await supabase.auth.signOut();
   };
 
   const handleToggleTask = async (dateKey, taskId) => {
@@ -54,34 +99,26 @@ function App() {
       [taskId]: !currentDayTasks[taskId]
     };
 
-    const newTasks = {
-      ...tasks,
+    setTasks(prev => ({
+      ...prev,
       [dateKey]: updatedDayTasks
-    };
+    }));
 
-    setTasks(newTasks);
+    // 2. Sync to Supabase
+    if (session) {
+      const { error } = await supabase
+        .from('user_tasks')
+        .upsert({
+          user_id: session.user.id,
+          date_key: dateKey,
+          tasks: updatedDayTasks
+        }, { onConflict: 'user_id, date_key' });
 
-    // 2. Sync to Server
-    try {
-      await fetch('/api/tasks', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(newTasks),
-      });
-    } catch (error) {
-      console.error('Error saving task:', error);
+      if (error) {
+        console.error('Error saving task:', error);
+      }
     }
   };
-
-  if (loading) {
-    return (
-      <div className="h-screen w-full flex items-center justify-center bg-slate-100 text-slate-500">
-        로딩 중...
-      </div>
-    );
-  }
 
   if (!isAuthenticated) {
     return (
@@ -90,6 +127,14 @@ function App() {
           <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Work Log</h1>
         </header>
         <PasscodeGate onAuthenticated={handleAuthenticated} />
+      </div>
+    );
+  }
+
+  if (loading) {
+    return (
+      <div className="h-screen w-full flex items-center justify-center bg-slate-100 text-slate-500">
+        로딩 중...
       </div>
     );
   }
