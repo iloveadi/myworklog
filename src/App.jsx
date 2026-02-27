@@ -103,7 +103,7 @@ function App() {
     // 1. Update local state immediately
     const currentDayTasks = tasks[dateKey] || {
       task1: false, task2: false, task3: false, task4: false,
-      task5: false, task6: false, task7: false, task8: false
+      task5: false, task6: false, task7: false, task8: false, task9: false
     };
 
     const updatedDayTasks = {
@@ -158,15 +158,9 @@ function App() {
 
   return (
     <div className="h-screen w-full flex flex-col items-center justify-start p-6 bg-slate-100">
-      <header className="w-full max-w-6xl mb-6 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-900 tracking-tight">My Work Log</h1>
-        <button
-          onClick={handleLogout}
-          className="px-3 py-1.5 text-xs font-medium text-slate-500 hover:text-red-600 border border-slate-300 rounded-md hover:bg-slate-50 transition-colors"
-        >
-          잠금
-        </button>
-      </header>
+      <main className="w-full max-w-6xl flex-1 min-h-0 mb-4">
+        <Calendar tasks={tasks} onToggleTask={handleToggleTask} onLogout={handleLogout} />
+      </main>
 
       {/* Debug/Status Indicator */}
       <div className="fixed bottom-4 right-4 z-50">
@@ -175,10 +169,6 @@ function App() {
         {saveStatus === 'error' && <span className="px-3 py-1 bg-red-100 text-red-700 rounded-full text-xs font-bold shadow-sm">저장 실패 (네트워크/설정 확인)</span>}
         {!session && isAuthenticated && !loading && <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-bold shadow-sm">오프라인 (저장 안됨)</span>}
       </div>
-
-      <main className="w-full max-w-6xl flex-1 min-h-0 mb-4">
-        <Calendar tasks={tasks} onToggleTask={handleToggleTask} />
-      </main>
     </div>
   );
 }

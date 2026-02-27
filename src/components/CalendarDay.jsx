@@ -11,7 +11,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
   const dateKey = format(day, 'yyyy-MM-dd');
   const dayTasks = tasks[dateKey] || {
     task1: false, task2: false, task3: false, task4: false,
-    task5: false, task6: false, task7: false, task8: false
+    task5: false, task6: false, task7: false, task8: false, task9: false
   };
 
   const isCurrentMonth = isSameMonth(day, currentMonth);
@@ -24,9 +24,9 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
       <button
         onClick={() => onToggleTask(dateKey, id)}
         className={cn(
-          "group relative flex items-center w-full px-1 py-1 rounded-md text-xs font-bold transition-all duration-200 overflow-hidden",
+          "group relative flex items-center justify-center px-1 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all duration-200 overflow-hidden min-w-0 flex-1",
           isActive
-            ? cn(activeBgClass, activeTextClass, "shadow-sm ring-1 ring-black/5")
+            ? cn(activeBgClass, activeTextClass, "shadow-sm ring-1 ring-black/10")
             : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
         )}
       >
@@ -37,13 +37,13 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
 
   return (
     <div className={cn(
-      "min-h-full p-2 flex flex-col gap-0.5 transition-all duration-300 border-b border-white/5 border-r",
+      "min-h-full p-2 flex flex-col gap-1.5 transition-all duration-300 border-b border-white/5 border-r",
       !isCurrentMonth ? "bg-black/40 opacity-50" : "hover:bg-white/5",
       isDayToday && "bg-blue-900/10 shadow-inner"
     )}>
-      <div className="flex justify-between items-start mb-2 px-1">
+      <div className="flex justify-between items-start mb-1 px-1">
         <span className={cn(
-          "text-base font-bold w-8 h-8 flex items-center justify-center rounded-full transition-colors",
+          "text-base font-bold w-7 h-7 flex items-center justify-center rounded-full transition-colors",
           !isCurrentMonth ? "text-slate-700" : "text-slate-300",
           isDayToday && "bg-blue-600 text-white shadow-md ring-2 ring-blue-400"
         )}>
@@ -51,15 +51,27 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
         </span>
       </div>
 
-      <div className="grid grid-cols-3 gap-1">
-        {renderTask('task1', '수면', 'bg-[#E0E7FF]', 'text-[#3730A3]')}
-        {renderTask('task2', '인북', 'bg-[#D1FAE5]', 'text-[#065F46]')}
-        {renderTask('task3', '나허', 'bg-[#EDE9FE]', 'text-[#5B21B6]')}
-        {renderTask('task4', '마음', 'bg-[#FFE4E6]', 'text-[#9F1239]')}
-        {renderTask('task5', '쉼표', 'bg-[#FEF3C7]', 'text-[#92400E]')}
-        {renderTask('task6', '티폐', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
-        {renderTask('task7', '네폐', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
-        {renderTask('task8', '낮친', 'bg-[#FCE7F3]', 'text-[#9D174D]')}
+      <div className="flex flex-col gap-1.5">
+        {/* Row 1: Youtube/Red Theme */}
+        <div className="grid grid-cols-4 gap-1">
+          {renderTask('task1', '수면', 'bg-red-600', 'text-white')}
+          {renderTask('task8', '낮친', 'bg-red-600', 'text-white')}
+          {renderTask('task9', '트뿜', 'bg-red-600', 'text-white')}
+        </div>
+
+        {/* Row 2: Blog/Blue Theme */}
+        <div className="grid grid-cols-4 gap-1">
+          {renderTask('task4', '마음', 'bg-blue-600', 'text-white')}
+          {renderTask('task3', '나허', 'bg-blue-600', 'text-white')}
+          {renderTask('task2', '인북', 'bg-blue-600', 'text-white')}
+          {renderTask('task5', '쉼표', 'bg-blue-600', 'text-white')}
+        </div>
+
+        {/* Row 3: Green Theme */}
+        <div className="grid grid-cols-4 gap-1">
+          {renderTask('task7', '네폐', 'bg-emerald-600', 'text-white')}
+          {renderTask('task6', '티폐', 'bg-emerald-600', 'text-white')}
+        </div>
       </div>
     </div>
   );

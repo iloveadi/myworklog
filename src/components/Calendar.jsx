@@ -14,7 +14,7 @@ import { ko } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import CalendarDay from './CalendarDay';
 
-const Calendar = ({ tasks, onToggleTask }) => {
+const Calendar = ({ tasks, onToggleTask, onLogout }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
 
     const handlePrevMonth = () => setCurrentMonth(subMonths(currentMonth, 1));
@@ -44,8 +44,15 @@ const Calendar = ({ tasks, onToggleTask }) => {
         <div className="flex flex-col h-full bg-neutral-900 rounded-2xl shadow-xl border border-neutral-800 overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between px-6 py-6 border-b border-neutral-800 bg-neutral-900">
-                <div className="flex items-center gap-4">
-                    <h2 className="text-3xl font-extrabold text-white tracking-tight drop-shadow-md">
+                <div className="flex items-center gap-4 text-white">
+                    <button
+                        onClick={onLogout}
+                        className="text-2xl hover:scale-110 transition-transform cursor-pointer"
+                        title="잠금"
+                    >
+                        🔒
+                    </button>
+                    <h2 className="text-3xl font-extrabold tracking-tight drop-shadow-md">
                         {format(currentMonth, 'yyyy년 M월', { locale: ko })} ({naverPmCount})
                     </h2>
                     <div className="flex items-center gap-1">
