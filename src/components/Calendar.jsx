@@ -8,6 +8,7 @@ import {
     startOfWeek,
     endOfWeek,
     eachDayOfInterval,
+    eachWeekOfInterval,
     isSameMonth
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
@@ -36,6 +37,12 @@ const Calendar = ({ tasks, onToggleTask, onLogout }) => {
         start: startDate,
         end: endDate,
     });
+
+    const weeks = eachWeekOfInterval({
+        start: startDate,
+        end: endDate,
+    });
+    const numWeeks = weeks.length;
 
     const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
 
@@ -97,9 +104,11 @@ const Calendar = ({ tasks, onToggleTask, onLogout }) => {
                 ))}
             </div>
 
-            {/* Days Grid - Scrollable Area */}
-            <div className="flex-1 overflow-y-auto min-h-0 bg-neutral-900">
-                <div className="grid grid-cols-7 auto-rows-[minmax(100px,1fr)]">
+            <div className="flex-1 min-h-0 bg-neutral-900">
+                <div
+                    className="grid grid-cols-7 h-full"
+                    style={{ gridTemplateRows: `repeat(${numWeeks}, 1fr)` }}
+                >
                     {calendarDays.map((day) => (
                         <CalendarDay
                             key={day.toISOString()}
