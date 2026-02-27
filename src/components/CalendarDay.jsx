@@ -16,6 +16,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
 
   const isCurrentMonth = isSameMonth(day, currentMonth);
   const isDayToday = isToday(day);
+  const dayOfWeek = day.getDay(); // 0: Sunday, 6: Saturday
 
   // Helper for rendering a task item
   const renderTask = (id, label, activeBgClass, activeTextClass) => {
@@ -24,7 +25,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
       <button
         onClick={() => onToggleTask(dateKey, id)}
         className={cn(
-          "group relative flex items-center justify-center px-1 py-1 rounded-md text-[10px] sm:text-xs font-bold transition-all duration-200 overflow-hidden min-w-0 flex-1",
+          "group relative flex items-center justify-center px-1 py-0.5 rounded-md text-[10px] sm:text-xs font-bold transition-all duration-200 overflow-hidden min-w-0 flex-1",
           isActive
             ? cn(activeBgClass, activeTextClass, "shadow-sm ring-1 ring-black/10")
             : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
@@ -37,21 +38,23 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
 
   return (
     <div className={cn(
-      "min-h-full p-2 flex flex-col gap-1.5 transition-all duration-300 border-b border-white/5 border-r",
+      "min-h-full p-1.5 flex flex-col gap-1 transition-all duration-300 border-b border-white/5 border-r",
       !isCurrentMonth ? "bg-black/40 opacity-50" : "hover:bg-white/5",
-      isDayToday && "bg-blue-900/10 shadow-inner"
+      isDayToday && "bg-blue-900/10 shadow-inner",
+      isCurrentMonth && dayOfWeek === 0 && "bg-red-900/10", // Sunday
+      isCurrentMonth && dayOfWeek === 6 && "bg-blue-900/10" // Saturday
     )}>
       <div className="flex justify-between items-start mb-1 px-1">
         <span className={cn(
-          "text-base font-bold w-7 h-7 flex items-center justify-center rounded-full transition-colors",
-          !isCurrentMonth ? "text-slate-700" : "text-slate-300",
+          "text-sm font-bold w-6 h-6 flex items-center justify-center rounded-full transition-colors",
+          !isCurrentMonth ? "text-slate-700" : (dayOfWeek === 0 ? "text-red-500" : (dayOfWeek === 6 ? "text-blue-400" : "text-slate-300")),
           isDayToday && "bg-blue-600 text-white shadow-md ring-2 ring-blue-400"
         )}>
           {format(day, 'd')}
         </span>
       </div>
 
-      <div className="flex flex-col gap-1.5">
+      <div className="flex flex-col gap-1">
         {/* Row 1: Youtube/Red Theme */}
         <div className="grid grid-cols-4 gap-1">
           {renderTask('task1', '수면', 'bg-red-600', 'text-white')}

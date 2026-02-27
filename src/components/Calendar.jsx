@@ -12,7 +12,13 @@ import {
 } from 'date-fns';
 import { ko } from 'date-fns/locale';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 import CalendarDay from './CalendarDay';
+
+export function cn(...inputs) {
+    return twMerge(clsx(inputs));
+}
 
 const Calendar = ({ tasks, onToggleTask, onLogout }) => {
     const [currentMonth, setCurrentMonth] = useState(new Date());
@@ -78,8 +84,14 @@ const Calendar = ({ tasks, onToggleTask, onLogout }) => {
 
             {/* Weekday Headers */}
             <div className="grid grid-cols-7 border-b border-neutral-800 bg-neutral-900">
-                {weekDays.map((day) => (
-                    <div key={day} className="py-3 text-center text-sm font-bold text-slate-200 uppercase tracking-wider drop-shadow-sm">
+                {weekDays.map((day, index) => (
+                    <div
+                        key={day}
+                        className={cn(
+                            "py-3 text-center text-sm font-bold uppercase tracking-wider drop-shadow-sm",
+                            index === 0 ? "text-red-500 bg-red-900/20" : index === 6 ? "text-blue-400 bg-blue-900/20" : "text-slate-200"
+                        )}
+                    >
                         {day}
                     </div>
                 ))}
@@ -87,7 +99,7 @@ const Calendar = ({ tasks, onToggleTask, onLogout }) => {
 
             {/* Days Grid - Scrollable Area */}
             <div className="flex-1 overflow-y-auto min-h-0 bg-neutral-900">
-                <div className="grid grid-cols-7 auto-rows-[minmax(120px,1fr)]">
+                <div className="grid grid-cols-7 auto-rows-[minmax(100px,1fr)]">
                     {calendarDays.map((day) => (
                         <CalendarDay
                             key={day.toISOString()}
