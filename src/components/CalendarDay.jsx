@@ -30,7 +30,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
             : "text-neutral-500 hover:text-neutral-300 hover:bg-white/5"
         )}
       >
-        <span className="truncate w-full text-left">{label}</span>
+        <span className="truncate w-full text-center">{label}</span>
       </button>
     );
   };
@@ -51,14 +51,14 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
         </span>
       </div>
 
-      <div className="flex flex-col gap-1">
-        {renderTask('task1', '수면 유도 음악실', 'bg-[#E0E7FF]', 'text-[#3730A3]')}
-        {renderTask('task2', '인사이트 북스', 'bg-[#D1FAE5]', 'text-[#065F46]')}
-        {renderTask('task3', 'narrhub', 'bg-[#EDE9FE]', 'text-[#5B21B6]')}
-        {renderTask('task4', '마음 산책', 'bg-[#FFE4E6]', 'text-[#9F1239]')}
-        {renderTask('task5', '쉼표가 필요한 시간', 'bg-[#FEF3C7]', 'text-[#92400E]')}
-        {renderTask('task6', '티스토리PM', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
-        {renderTask('task7', '네이버PM', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
+      <div className="grid grid-cols-3 gap-1">
+        {renderTask('task1', '수면', 'bg-[#E0E7FF]', 'text-[#3730A3]')}
+        {renderTask('task2', '인북', 'bg-[#D1FAE5]', 'text-[#065F46]')}
+        {renderTask('task3', '나허', 'bg-[#EDE9FE]', 'text-[#5B21B6]')}
+        {renderTask('task4', '마음', 'bg-[#FFE4E6]', 'text-[#9F1239]')}
+        {renderTask('task5', '쉼표', 'bg-[#FEF3C7]', 'text-[#92400E]')}
+        {renderTask('task6', '티폐', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
+        {renderTask('task7', '네폐', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
       </div>
     </div>
   );
