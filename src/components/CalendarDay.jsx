@@ -11,7 +11,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
   const dateKey = format(day, 'yyyy-MM-dd');
   const dayTasks = tasks[dateKey] || {
     task1: false, task2: false, task3: false, task4: false,
-    task5: false, task6: false, task7: false
+    task5: false, task6: false, task7: false, task8: false
   };
 
   const isCurrentMonth = isSameMonth(day, currentMonth);
@@ -59,6 +59,7 @@ const CalendarDay = ({ day, currentMonth, tasks, onToggleTask }) => {
         {renderTask('task5', '쉼표', 'bg-[#FEF3C7]', 'text-[#92400E]')}
         {renderTask('task6', '티폐', 'bg-[#FFEDD5]', 'text-[#9A3412]')}
         {renderTask('task7', '네폐', 'bg-[#ECFCCB]', 'text-[#3F6212]')}
+        {renderTask('task8', '낮친', 'bg-[#FCE7F3]', 'text-[#9D174D]')}
       </div>
     </div>
   );

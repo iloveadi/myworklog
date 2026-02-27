@@ -103,7 +103,7 @@ function App() {
     // 1. Update local state immediately
     const currentDayTasks = tasks[dateKey] || {
       task1: false, task2: false, task3: false, task4: false,
-      task5: false, task6: false, task7: false
+      task5: false, task6: false, task7: false, task8: false
     };
 
     const updatedDayTasks = {
